@@ -6,7 +6,7 @@
 /*   By: amenadue <amenadue@student.42adel.org.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/18 17:49:37 by amenadue          #+#    #+#             */
-/*   Updated: 2022/03/18 19:33:54 by amenadue         ###   ########.fr       */
+/*   Updated: 2022/03/19 16:15:55 by amenadue         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -851,16 +851,8 @@ t_list *t_lstlast(t_list *lst)
 		return (NULL);
 	curr = lst;
 	while (curr->next != NULL)
-	{
 		curr = curr->next;
-	}
 	return (curr);
 }
 
 #endif
-
-
-
-type mix
-type s width
-

@@ -1,13 +1,12 @@
 # Minilibft - Syntax Reference
+## Categories
+[Character Manipulation](# "Goes to Character based functions")  
+[Memory Manipulation](# "Goes to Memory bassed functinos")  
+[String Manipulation](# "Goes to String based function")  
+[Puting to FileDescriptors](# "Goes to typed printing functions")  
+[Special Functions](# "Goes to Special Functions")
 
-## Introduction
-If something doesn't quite make sense to you, then hover over the text and the tip might help.
-
-## Contents
-**[Functions](#functions "Navigate to Functions")**
-- **[`ft_strlen`](#ft_strlen "Goto ft_strlen")**
-
-### Functions
+## Functions
 #### `int ft_isalnum(int c)`
 `Returns:` [*`boolean truth for if the character when printed gives any alphanumeric value`*](# "if the character is either an ascii letter or number")
 
@@ -25,6 +24,12 @@ If something doesn't quite make sense to you, then hover over the text and the t
 
 #### `int ft_ascii(int c)`
 `Returns:` [*`boolean truth for if the character is within the ascii boundary`*](# "if the value passed in is less than 127")
+
+#### `int ft_tolower(int c)`
+`Returns:` [*`The String with all alphabetical characters replaced with their lowercase counterpart`*](# "lowercases all characters in string")
+
+#### `int ft_toupper(int c)`
+`Returns:` [*`The String with all alphabetical characters replaced with their uppercase counterpart`*](# "UPPERcases all characters in string")
 
 #### `size_t ft_strlen(char *str)`
 `Returns:` [*`Amount of characters found before a null at the pointer.`*](# "Size of null terminated string")
@@ -53,6 +58,9 @@ If something doesn't quite make sense to you, then hover over the text and the t
 #### `char *ft_strchr(const char *s, int c)`
 `Returns:` [*`The String of the first occurence of the character c`*](# "String starting at where c occurs first")
 
+#### `char *ft_strrchr(const char *s, int c)`
+`Returns:` [*`The String of the last occurance of the character c`*](# "String stating at where c occurs last")
+
 #### `char *ft_strdup(const char *s1)`
 `Returns:` [*`A String Duplicate of the string passed in`*](# "Allocates and Copies s1 and returns the new string")
 
@@ -63,38 +71,43 @@ If something doesn't quite make sense to you, then hover over the text and the t
 `Returns:` [*`The String at "dst" after the characters up to "dstsize" have been replaced with the characters in "src"`*](# "Replaces dstsize amount of characters in dst with src ")
 
 #### `int ft_strncmp(const char *s1, const char *s2, size_t n)`
-`Returns:` [*`The difference of both character pointers at the position of the first difference in range n`*](# "")
+`Returns:` [*`The difference of both character pointers at the position of the first difference in range n`*](# "Character difference of both strings if any")
 
 #### `char *ft_strnstr(const char *haystack, const char *needle, size_t len)`
+`Returns:` [*`A String of the occurance needle in haystack in range of n`*](# "Looks for a string within a string")
 
-char	*ft_strrchr(const char *s, int c)
+#### `char *ft_substr(char const *s, unsigned int start, size_t len)`
+`Returns:` [*`A String that is a substr of "*s" starting at position "start" and has the length of "len"`*](# "Chunks the string")
 
-int	ft_tolower(int c)
+#### `char *ft_strjoin(char const *s1, char const *s2)`
+`Returns:` [*`A String that contains "s1" and "s2" combined`*](# "Joins strings into one")
 
-int	ft_toupper(int c)
+#### `char *ft_strtrim(char const *s1, char const *set)`
+`Returns:` [*`A String that has all the characters in "*set" removed`*](# "Removes characters in set and returns new string")
 
-char	*ft_substr(char const *s, unsigned int start, size_t len)
+#### `char **ft_split(char const *s, char c)`
+`Returns:` [*`An Array of String of the sections in "*s" seperated by 'c'`*](# "Splits the string by c and returns the array")
 
-char	*ft_strjoin(char const *s1, char const *s2)
+#### `char *ft_itoa(int n)`
+`Returns:` [*`A String of ascii characters to represent the number passed in`*](# "Converts an integer to a string")
 
-char	*ft_strtrim(char const *s1, char const *set)
+#### `char *ft_strmapi(char const *s, char (*f)(unsigned int, char))`
+`Returns:` [*`The String after each characer is ran through the function that prototypes as such [char f(int index, char c);]`*](# "Runs a function on each character in string")
 
-char	**ft_split(char const *s, char c)
+#### `void ft_striteri(char *s, void (*f)(unsigned int, char*))`
+`Returns:` [*`Replaces each character in String with characters after each character is ran through the function that prototypes as such [char f(int index, char c);]`*](# "Replaces the characters in string ran through a function")
 
-char	*ft_itoa(int n)
+#### `void ft_putchar_fd(char c, int fd)`
+`Returns:` [*`Puts a character to the file descriptor`*](# "prints character")
 
-char	*ft_strmapi(char const *s, char (*f)(unsigned int, char))
+#### `void ft_putstr_fd(char *s, int fd)`
+`Returns:` [*`Puts a string to the file descriptor`*](# "prints string")
 
-void	ft_striteri(char *s, void (*f)(unsigned int, char*))
+#### `void ft_putendl_fd(char *s, int fd)`
+`Returns:` [*`Puts a newline character to file descriptor`*](# "prints '\n'")
 
-void	ft_putchar_fd(char c, int fd)
+#### `void ft_putnbr_fd(int n, int fd)`
+`Returns:` [*`Puts an integer to file descriptor`*](# "prints integer")
 
-void	ft_putstr_fd(char *s, int fd)
-
-void	ft_putendl_fd(char *s, int fd)
-
-void	ft_putnbr_fd(int n, int fd)
-
-int	ft_printf(const char *string, ...)
-## Index
-
+#### `int ft_printf(const char *string, ...)`
+`Returns:` [*`The number of characters printed after running`*](# "prints a formatted string")
