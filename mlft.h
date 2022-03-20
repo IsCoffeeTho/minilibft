@@ -6,7 +6,7 @@
 /*   By: amenadue <amenadue@student.42adel.org.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/18 17:49:37 by amenadue          #+#    #+#             */
-/*   Updated: 2022/03/19 16:15:55 by amenadue         ###   ########.fr       */
+/*   Updated: 2022/03/20 20:15:13 by amenadue         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -599,219 +599,6 @@ void	ft_putnbr_fd(int n, int fd)
 	}
 }
 
-static char	*numberlength(unsigned long number, int *length)
-{
-	char	*string;
-
-	while (number >= 16)
-	{
-		number = number / 16;
-		*length += 1;
-	}
-	string = (char *)malloc((*length + 1) * sizeof(char));
-	if (string == NULL)
-		return (NULL);
-	string[*length] = '\0';
-	return (string);
-}
-
-static void	ifhex(t_print *arg_count, char character)
-{
-	unsigned int	number;
-	int				length;
-	char			*string;
-
-	number = va_arg(arg_count->args, unsigned int);
-	length = 1;
-	string = numberlength(number, &length);
-	length--;
-	while (length >= 0)
-	{
-		if (number % 16 < 10)
-			string[length] = '0' + (number % 16);
-		else if (character == 'x')
-			string[length] = 'a' - 10 + (number % 16);
-		else if (character == 'X')
-			string[length] = 'A' - 10 + (number % 16);
-		number = number / 16;
-		length--;
-		arg_count->counter++;
-	}
-	ft_putstr_fd(string, 1);
-	free(string);
-}
-
-static void	ifpointer(t_print *arg_count)
-{
-	int				length;
-	char			*string;
-	unsigned long	number;
-
-	number = va_arg(arg_count->args, unsigned long);
-	length = 1;
-	string = numberlength(number, &length);
-	ft_putstr_fd("0x", 1);
-	arg_count->counter += 2;
-	length--;
-	while (length >= 0)
-	{
-		if (number % 16 < 10)
-			string[length] = '0' + (number % 16);
-		else
-			string[length] = 'a' + (number % 16) - 10;
-		number = number / 16;
-		length--;
-		arg_count->counter++;
-	}
-	ft_putstr_fd(string, 1);
-	free(string);
-}
-
-static void	ifcharacter(t_print *arg_count)
-{
-	ft_putchar_fd(va_arg(arg_count->args, int), 1);
-	arg_count->counter++;
-}
-
-static void	ifstring(t_print *arg_count)
-{
-	char	*string;
-	int		length;
-
-	string = va_arg(arg_count->args, char *);
-	if (string == NULL)
-	{
-		ft_putstr_fd("(null)", 1);
-		arg_count->counter += 6;
-	}
-	else
-	{
-		length = ft_strlen(string);
-		ft_putstr_fd(string, 1);
-		arg_count->counter += length;
-	}
-}
-
-static int	numbersize(unsigned int number)
-{
-	int	length;
-
-	length = 1;
-	while (number > 9)
-	{
-		number = number / 10;
-		length++;
-	}
-	return (length);
-}
-
-static char	*itoa(unsigned int number)
-{
-	char	*string;
-	int		length;
-
-	length = numbersize(number);
-	string = (char *)malloc(length + 1 * sizeof(char));
-	if (string == NULL)
-		return (NULL);
-	string[length] = '\0';
-	while (length > 0)
-	{
-		string[--length] = number % 10 + '0';
-		number = number / 10;
-	}
-	return (string);
-}
-
-static void	ifint(t_print *arg_count)
-{
-	char	*string;
-	int		result;
-
-	result = va_arg(arg_count->args, int);
-	string = ft_itoa(result);
-	ft_putstr_fd(string, 1);
-	arg_count->counter += ft_strlen(string);
-	free(string);
-}
-
-static void	ifunsignedint(t_print *arg_count)
-{
-	char			*string;
-	unsigned int	result;
-
-	result = va_arg(arg_count->args, unsigned int);
-	string = itoa(result);
-	ft_putstr_fd(string, 1);
-	arg_count->counter += ft_strlen(string);
-	free(string);
-}
-
-static t_print	*start(void)
-{
-	t_print	*arg_count;
-
-	arg_count = (t_print *)malloc(sizeof(t_print));
-	if (arg_count == NULL)
-		return (NULL);
-	arg_count->counter = 0;
-	return (arg_count);
-}
-
-static void	printcheck(const char character, t_print *arg_count)
-{
-	if (character == 'c')
-		ifcharacter(arg_count);
-	else if (character == 's')
-		ifstring(arg_count);
-	else if (character == 'p')
-		ifpointer(arg_count);
-	else if (character == 'i' || character == 'd')
-		ifint(arg_count);
-	else if (character == 'u')
-		ifunsignedint(arg_count);
-	else if (character == 'x' || character == 'X')
-		ifhex(arg_count, character);
-	else if (character == '%')
-	{
-		ft_putchar_fd('%', 1);
-		arg_count->counter++;
-	}
-	else if (character != '\0')
-	{
-		write(1, &character, 1);
-		arg_count->counter++;
-	}
-}
-
-int	ft_printf(const char *string, ...)
-{
-	t_print	*arg_count;
-	int		printcomplete;
-	int		i;
-
-	i = 0;
-	arg_count = start();
-	printcomplete = 0;
-	va_start(arg_count->args, string);
-	while (string[i] != '\0')
-	{
-		if (string[i] == '%')
-			printcheck(string[++i], arg_count);
-		else
-		{
-			ft_putchar_fd(string[i], 1);
-			arg_count->counter++;
-		}
-		if (string[i] != '\0')
-			i++;
-	}
-	printcomplete = arg_count->counter;
-	va_end(arg_count->args);
-	free(arg_count);
-	return (printcomplete);
-}
-
 t_list *ft_lstnew(void *content)
 {
 	t_list list;
@@ -820,39 +607,104 @@ t_list *ft_lstnew(void *content)
 	return (&list);
 }
 
-void ft_lstadd_front(t_list** lst, t_list *new)
+void ft_lstadd_front(t_list** lst, t_list *item)
 {
-	new->next = *lst;
-	*lst = &new;
+	if(!lst || !item)
+		return ;
+	item->next = *lst;
+	*lst = &item;
 }
 
 int ft_lstsize(t_list *lst)
 {
 	int i;
-	t_list *curr;
 
-	if (lst == NULL)
-		return (0);
-	curr = lst;
-	i = 1;
-	while (curr->next != NULL)
+	i = 0;
+	while (lst)
 	{
-		curr = curr->next;
+		lst = lst->next;
 		i++;
 	}
 	return (i);
 }
 
-t_list *t_lstlast(t_list *lst)
+t_list *ft_lstlast(t_list *lst)
+{
+	while (lst)
+		if (lst->next)
+			lst = lst->next;
+	return (lst);
+}
+
+void ft_lstadd_back(t_list **lst, t_list *item)
+{
+	t_list *last;
+	last = ft_lstlast(*lst);
+	if (last)
+		last->next = item;
+	else
+		*lst = &item;
+}
+
+void ft_lstdelone(t_lst *lst, void (*del)(void*))
+{
+	if (!lst || !del)
+		return ;
+	(del)(lst->content);
+	free(lst);
+}
+
+void ft_lstclear(t_list **lst, void (*del)(void*))
 {
 	t_list *curr;
+	t_list *next;
+	
+	while (curr)
+	{
+		next = curr->next;
+		ft_lstdelone(curr);
+		curr = next;
+	}
+	*lst = NULL;
+}
 
-	if (lst == NULL)
-		return (NULL);
-	curr = lst;
-	while (curr->next != NULL)
-		curr = curr->next;
-	return (curr);
+void ft_lstiter(t_list *lst, void *(*f)(void *))
+{
+	if (!f)
+		return ;
+
+	while (lst)
+	{
+		f(lst->content);
+		lst = lst->next;
+	}
+}
+
+t_list	*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *))
+{
+	t_list *new_list;
+	t_list *save;
+
+	if (!lst || !f || !del)
+		return (0);
+	new_list = ft_lstnew(f(lst->content));
+	if (!new_list)
+		return (0);
+	save = new_list;
+	lst = lst->next;
+	while (lst)
+	{
+		new_list->next = ft_lstnew(f(lst->content));
+		if (!new_list->next)
+		{
+			ft_lstclear(&save, del);
+			return (0);
+		}
+		new_list = new_list->next;
+		lst = lst->next;
+	}
+	new_list->next = NULL;
+	return (save);
 }
 
 #endif
