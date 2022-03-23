@@ -6,7 +6,7 @@
 /*   By: amenadue <amenadue@student.42adel.org.a    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/18 17:49:37 by amenadue          #+#    #+#             */
-/*   Updated: 2022/03/20 20:15:13 by amenadue         ###   ########.fr       */
+/*   Updated: 2022/03/24 02:01:22 by amenadue         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -612,7 +612,7 @@ void ft_lstadd_front(t_list** lst, t_list *item)
 	if(!lst || !item)
 		return ;
 	item->next = *lst;
-	*lst = &item;
+	*lst = item;
 }
 
 int ft_lstsize(t_list *lst)
@@ -643,10 +643,10 @@ void ft_lstadd_back(t_list **lst, t_list *item)
 	if (last)
 		last->next = item;
 	else
-		*lst = &item;
+		*lst = item;
 }
 
-void ft_lstdelone(t_lst *lst, void (*del)(void*))
+void ft_lstdelone(t_list *lst, void (*del)(void*))
 {
 	if (!lst || !del)
 		return ;
@@ -658,11 +658,11 @@ void ft_lstclear(t_list **lst, void (*del)(void*))
 {
 	t_list *curr;
 	t_list *next;
-	
+
 	while (curr)
 	{
 		next = curr->next;
-		ft_lstdelone(curr);
+		ft_lstdelone(curr, del);
 		curr = next;
 	}
 	*lst = NULL;
@@ -705,6 +705,243 @@ t_list	*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *))
 	}
 	new_list->next = NULL;
 	return (save);
+}
+
+static int	ft_hex_len(unsigned	int num)
+{
+	int	len;
+
+	len = 0;
+	while (num != 0)
+	{
+		len++;
+		num = num / 16;
+	}
+	return (len);
+}
+
+static void	ft_put_hex(unsigned int num, const char format)
+{
+	if (num >= 16)
+	{
+		ft_put_hex(num / 16, format);
+		ft_put_hex(num % 16, format);
+	}
+	else
+	{
+		if (num <= 9)
+			ft_putchar_fd((num + '0'), 1);
+		else
+		{
+			if (format == 'x')
+				ft_putchar_fd((num - 10 + 'a'), 1);
+			if (format == 'X')
+				ft_putchar_fd((num - 10 + 'A'), 1);
+		}
+	}
+}
+
+static int	ft_print_hex(unsigned int num, const char format)
+{
+	if (num == 0)
+		return (write(1, "0", 1));
+	else
+		ft_put_hex(num, format);
+	return (ft_hex_len(num));
+}
+
+static int	ft_ptr_len(unsigned long long num)
+{
+	int	len;
+
+	len = 0;
+	while (num != 0)
+	{
+		len++;
+		num = num / 16;
+	}
+	return (len);
+}
+
+static void	ft_put_ptr(unsigned long long num)
+{
+	if (num >= 16)
+	{
+		ft_put_ptr(num / 16);
+		ft_put_ptr(num % 16);
+	}
+	else
+	{
+		if (num <= 9)
+			ft_putchar_fd((num + '0'), 1);
+		else
+			ft_putchar_fd((num - 10 + 'a'), 1);
+	}
+}
+
+static int	ft_print_ptr(unsigned long long ptr)
+{
+	int	print_length;
+
+	print_length = 0;
+	print_length += write(1, "0x", 2);
+	if (ptr == 0)
+		print_length += write(1, "0", 1);
+	else
+	{
+		ft_put_ptr(ptr);
+		print_length += ft_ptr_len(ptr);
+	}
+	return (print_length);
+}
+
+static int	ft_num_len(unsigned	int num)
+{
+	int	len;
+
+	len = 0;
+	while (num != 0)
+	{
+		len++;
+		num = num / 10;
+	}
+	return (len);
+}
+
+static char	*ft_uitoa(unsigned int n)
+{
+	char	*num;
+	int		len;
+
+	len = ft_num_len(n);
+	num = (char *)malloc(sizeof(char) * (len + 1));
+	if (!num)
+		return (0);
+	num[len] = '\0';
+	while (n != 0)
+	{
+		num[len - 1] = n % 10 + 48;
+		n = n / 10;
+		len--;
+	}
+	return (num);
+}
+
+static int	ft_print_unsigned(unsigned int n)
+{
+	int		print_length;
+	char	*num;
+
+	print_length = 0;
+	if (n == 0)
+		print_length += write(1, "0", 1);
+	else
+	{
+		num = ft_uitoa(n);
+		print_length += ft_printstr(num);
+		free(num);
+	}
+	return (print_length);
+}
+
+static void	ft_putstr(char *str)
+{
+	int	i;
+
+	i = 0;
+	while (str[i])
+	{
+		write(1, &str[i], 1);
+		i++;
+	}
+}
+
+static int	ft_printstr(char *str)
+{
+	int	i;
+
+	i = 0;
+	if (str == NULL)
+	{
+		ft_putstr("(null)");
+		return (6);
+	}
+	while (str[i])
+	{
+		write(1, &str[i], 1);
+		i++;
+	}
+	return (i);
+}
+
+static int	ft_printnbr(int n)
+{
+	int		len;
+	char	*num;
+
+	len = 0;
+	num = ft_itoa(n);
+	len = ft_printstr(num);
+	free(num);
+	return (len);
+}
+
+static int	ft_printpercent(void)
+{
+	write(1, "%", 1);
+	return (1);
+}
+
+static int	ft_printchar(int c)
+{
+	ft_putchar_fd(c, 1);
+	return (1);
+}
+
+static int	ft_formats(va_list args, const char format)
+{
+	int	print_length;
+
+	print_length = 0;
+	if (format == 'c')
+		print_length += ft_printchar(va_arg(args, int));
+	else if (format == 's')
+		print_length += ft_printstr(va_arg(args, char *));
+	else if (format == 'p')
+		print_length += ft_print_ptr(va_arg(args, unsigned long long));
+	else if (format == 'd' || format == 'i')
+		print_length += ft_printnbr(va_arg(args, int));
+	else if (format == 'u')
+		print_length += ft_print_unsigned(va_arg(args, unsigned int));
+	else if (format == 'x' || format == 'X')
+		print_length += ft_print_hex(va_arg(args, unsigned int), format);
+	else if (format == '%')
+		print_length += ft_printpercent();
+	return (print_length);
+}
+
+int	ft_printf(const char *str, ...)
+{
+	int		i;
+	va_list	args;
+	int		print_length;
+
+	i = 0;
+	print_length = 0;
+	va_start(args, str);
+	while (str[i])
+	{
+		if (str[i] == '%')
+		{
+			print_length += ft_formats(args, str[i + 1]);
+			i++;
+		}
+		else
+			print_length += ft_printchar(str[i]);
+		i++;
+	}
+	va_end(args);
+	return (print_length);
 }
 
 #endif

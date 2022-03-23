@@ -5,16 +5,20 @@ Minilibft is a header meant to be used instead of all of libft in personal proje
 ## Installation
 **REQUIREMENTS:**
 - *SUDO: You have access to the `/usr/include/` folder*
-- *Compbatible: Upon running `make test` it passes all the tests, if not pull an issue with the details provided by the tester.*
+
+###### INSTALLATION IS NOT QUITE READY!!!
 
 One liner:
 ```bash
-
+git clone https://github.com/iscoffeetho/minilibft.git; cd minilibft; make all; cd ..; rm minilibft 
 ```
-
 Step by step:
 ```bash
-
+git clone https://github.com/iscoffeetho/minilibft.git
+cd minilibft
+make install
+cd ..
+rm minilibft 
 ```
 
 ## Usage
