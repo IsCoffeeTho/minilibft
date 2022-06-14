@@ -6,12 +6,11 @@
 #    By: amenadue <amenadue@student.42adel.org.a    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/18 13:09:38 by amenadue          #+#    #+#              #
-#    Updated: 2022/03/24 02:22:04 by amenadue         ###   ########.fr        #
+#    Updated: 2022/06/14 22:50:28 by amenadue         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = mlft
 
 all:
-	-@printf "Installing\n"
-	-@mv mlft.h /usr/include/libft.h
+	-@cp mlft.h /usr/include/libft.h
