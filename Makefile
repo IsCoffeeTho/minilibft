@@ -12,14 +12,6 @@
 
 NAME = mlft
 
-all: install
-
-install:
+all:
 	-@printf "Installing\n"
-
-verbose:
-	
-
-i: install
-
-v: verbose
+	-@mv mlft.h /usr/include/
