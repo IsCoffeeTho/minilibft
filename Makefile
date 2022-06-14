@@ -14,4 +14,4 @@ NAME = mlft
 
 all:
 	-@printf "Installing\n"
-	-@mv mlft.h /usr/include/
+	-@mv mlft.h /usr/include/libft.h
